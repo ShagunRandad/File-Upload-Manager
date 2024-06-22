@@ -35,8 +35,5 @@ public class LoginController {
 			return new ResponseEntity<>("Registration failed!", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	
-	
 
 }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Files</title>
+</head>
+<body>
+    <h1>User Files</h1>
+    
+    <div th:if="${files != null and not #lists.isEmpty(files)}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="file : ${files}">
+                    <td th:text="${file.filename}"></td> <!-- Display filename -->
+                    <td>
+                        <img th:src="@{'data:image/jpeg;base64,' + ${file.base64Data}}" 
+                             style="max-width: 100px; max-height: 100px;"/> <!-- Display image -->
+                    </td>
+                    <td>
+                        <form th:action="@{'/delete/' + ${file.id}}" method="post">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${files == null or #lists.isEmpty(files)}">
+        <p>No files found.</p>
+    </div>
+</body>
+</html>

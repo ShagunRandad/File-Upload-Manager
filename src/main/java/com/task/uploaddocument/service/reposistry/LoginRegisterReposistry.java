@@ -7,3 +7,4 @@ import com.task.uploaddocument.Entity.Login;
 public interface LoginRegisterReposistry extends JpaRepository<Login,Integer> {
 
 }
+
