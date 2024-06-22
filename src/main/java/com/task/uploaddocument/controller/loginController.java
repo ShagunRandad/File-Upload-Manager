@@ -29,10 +29,10 @@ public class LoginController {
 		boolean registrationResult = registerUserService.regiterUser(loginDto);
 		if (registrationResult) {
 			model.addAttribute("message", "Registration successful!"); 
-			return new ResponseEntity<>("Registration successful!", HttpStatus.CREATED);
+			return new ResponseEntity<>("login", HttpStatus.CREATED);
 		} else {
 			model.addAttribute("error", "Registration failed!");
-			return new ResponseEntity<>("Registration failed!", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("login", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

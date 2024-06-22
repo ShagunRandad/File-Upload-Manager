@@ -17,5 +17,5 @@ public interface RegisterUserService {
    File uploadFile(String userId, MultipartFile file) throws IOException;
    
    List<File> getFilesByUserId(String userId);
-	
+   
 }

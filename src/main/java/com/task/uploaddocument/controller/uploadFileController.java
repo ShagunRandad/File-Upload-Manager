@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.task.uploaddocument.Entity.File;
+import com.task.uploaddocument.service.FileService;
 import com.task.uploaddocument.service.RegisterUserService;
 import com.task.uploaddocument.util.FileUtils;
 
@@ -26,6 +27,8 @@ public class UploadFileController {
 	
 	@Autowired
 	RegisterUserService registerUserService;
+	@Autowired
+	FileService fileService;
 	
 	@PostMapping("/{userId}/files")
     public ResponseEntity<?> uploadFile(@PathVariable String userId,
@@ -60,6 +63,18 @@ public class UploadFileController {
 		model.addAttribute("files", files);
 		model.addAttribute("userId", userId);
 		return "dashboard";
+	}
+	
+	
+	@PostMapping(value="/deleteUploadedFile/{id}")
+	public String deletefile(@PathVariable Integer id,Model model) {
+	if(	fileService.deleteFileById(id)) {
+		model.addAttribute("message", "File deleted succesfully");
+	}else {
+		model.addAttribute("message", "File not deleted");
+	}
+	return null;
+		
 	}
 	
 
