@@ -3,10 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>User Files</title>
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"
-    rel="stylesheet">
+      <meta name="message" th:attr="content=${message}" />
+      
 <style>
+/*Upload File Css*/
+   .Choose_file_Main{
+	margin-left: 3%;
+	margin-top:5%;
+	text-align:center;
+    border: 0.5px dashed #00ADEE;
+    border-radius: 5px;
+    height: 8vh;
+    width: 91%;
+    font-size: 14px;
+    font-weight: 100;
+    justify-content: center;
+    padding-top: 5%;
+}
+.icon_file{
+	height:0;
+}
+#Add_image_icon{
+	position:relative;
+	bottom:6px;
+}
+.fixLabel{
+   position: relative;
+    bottom: 5px;
+    padding-left: 8px;
+    color: #00ADEE;
+    
+}
+ #labelName{
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    width: 100px;
+    padding-left:8px;
+}
+   #myfile{
+	opacity: 0;
+    height: 9vh;
+    width: 100%;
+    position: relative;
+    bottom: 42px;
+    position: relative;
+    cursor: pointer !important;
+}
+/* Upload File css End */
+
 .my_Table{
 width:98%;
 border:1px solid #DBDBDB;
@@ -17,11 +64,27 @@ margin:10px;
     color: #fff;
     font-size: 18px;
 }
+
+.register_Button{
+    border: none;
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+    height: 36px;
+    border-radius: 5px;
+    color:#fff;
+}
+
+.modalclose{
+border: none;
+    background: none;
+    color: #00ADEE;
+    font-size: 23px;
+}
+
 #upload_table > thead > tr > th{
  text-align: center;
 }
 #upload_table_wrapper{
-margin:1%;
+margin-top:-17px;
 }
 #upload_table_length{
 margin-bottom:1%;
@@ -73,45 +136,96 @@ margin-left:1%;
 </style>    
 </head>
 <body>
-    <h1 class="table_Title">User Files</h1>
-    <div th:if="${files != null and not #lists.isEmpty(files)}">
-        <table class="my_Table" id="upload_table">
-        <caption class="d-none"></caption>
-            <thead class="table_Head">
-                <tr>
-                    <th>Sr.No</th>
-                    <th>Filename</th>
-                    <th>Image</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="file : ${files}">
-                 <td>1</td> 
-                    <td th:text="${file.filename}"></td> 
-                    <td>
-                        <img th:src="@{'data:image/jpeg;base64,' + ${file.base64Data}}" 
-                             style="max-width: 100px; max-height: 100px;" alt="img"/> 
-                    </td>
-                    <td>
-                        <form th:action="@{'/delete/' + ${file.id}}" method="post">
-                            <button type="submit" class="delete_Button">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div th:if="${files == null or #lists.isEmpty(files)}">
+    <h4 class="table_Title" style="margin-left: 35%;margin-top: 7px;">Uploaded Documents</h4>
+    
+    
+    	<!-- registartion modal -->
+	<div class="modal fade" id="registration_Modal"
+		data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header modal_Head">
+					<h2 class="form_Title">Upload Image</h2>
+					<button type="button" class="modalclose" data-bs-dismiss="modal"
+						aria-label="Close">X</button>
+				</div>
+				<div class="modal-body registration_Modal_Body">
+					<form class="main_Form"
+						th:action="@{'/users/' + ${userId} + '/files'}" method="post"
+						enctype="multipart/form-data" autocomplete="on">
+						<div class="form_Body">
+							<div class="form_Fields">
+								<div class="Choose_file_Main">
+									<div class="icon_file">
+										<span class="fixLabel" id="toggle">Add Image</span> <label
+											for="myfileName" id="labelName"></label> <input type="file"
+											id="myfile" name="file" title="" onchange="showname()"
+											class="changeName" accept="image/png, image/gif, image/jpeg"
+											style="z-index: 2;" required>
+									</div>
+								</div>
+
+								<div class="mt-4">
+									<button class="register_Button" type="submit">Upload</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="">
+		<button class="register_Button" type="submit"
+			onclick="registrationForm()"
+			style="position: relative; margin-left: 85%; top: 36px; z-index: 999">Upload
+			Image</button>
+			
+			 <form th:action="@{/logout}" method="get">
+        <button class="register_Button" type="submit" style="margin-left: 94%;">Log out</button>
+    </form>
+	</div>
+
+	<div th:if="${files != null and not #lists.isEmpty(files)}">
+		<table class="my_Table" id="upload_table">
+			<caption class="d-none"></caption>
+			<thead class="table_Head">
+				<tr>
+					<th>Sr.No</th>
+					<th>Filename</th>
+					<th>Image</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="file, stat : ${files}">
+					<td th:text="${stat.index + 1}"></td>
+					<td th:text="${file.filename}"></td>
+					<td><img
+						th:src="@{'data:image/jpeg;base64,' + ${file.base64Data}}"
+						style="max-width: 100px; max-height: 100px;" alt="img" /></td>
+					<td>
+						<form
+							th:action="@{'/users/' + ${userId} + '/files/' + ${file.id} + '/delete'}"
+							method="post">
+							<button type="submit" class="delete_Button">Delete</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div th:if="${files == null or #lists.isEmpty(files)}">
         <p>No files found.</p>
     </div>
     
    
-    
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>

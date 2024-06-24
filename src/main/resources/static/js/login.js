@@ -18,7 +18,7 @@ function userRegistration(){
 	let confirmPassword = $("#confirm_Pass").val();
 	
 	if(password==confirmPassword){
-		swal("register successfully");
+	
 	}else{
 		swal("Password and Confirm password does not match");
 		return false;

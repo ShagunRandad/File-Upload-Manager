@@ -1,9 +1,8 @@
 package com.task.uploaddocument.service.impl;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,8 +19,6 @@ import com.task.uploaddocument.service.RegisterUserService;
 import com.task.uploaddocument.service.reposistry.FileRepository;
 import com.task.uploaddocument.service.reposistry.LoginRegisterReposistry;
 import com.task.uploaddocument.util.FileUtils;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class RegisterUserServiceImpl implements RegisterUserService {
@@ -69,5 +66,16 @@ public class RegisterUserServiceImpl implements RegisterUserService {
 	        Login login = loginRegisterReposistry.findById(Integer.parseInt(userId)).orElseThrow(() -> new RuntimeException("User not found"));
 	        return login.getFiles();
 	    }
-
+	
+	@Override
+	   public Optional<Login> loginUser(String email, String password) {
+	        Optional<Login> userOptional = loginRegisterReposistry.findByEmail(email);
+	        if (userOptional.isPresent()) {
+	            Login login = userOptional.get();
+	            if (passwordEncoder.matches(password, login.getPassword())) {
+	                return Optional.of(login);
+	            }
+	        }
+	        return Optional.empty();
+	    }
 }

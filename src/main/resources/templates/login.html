@@ -113,29 +113,28 @@ margin-top:14px;
 			</div>
 
 			<div class="login_Fields">
+				<form action="/users/login" method="post" id="loginForm">
+					<div class="mt-2">
+						<label for="email">Email</label> <input type="email" name="email"
+							class="form-control" id="email_Id">
+					</div>
 
-				<div class="mt-2">
-					<label for="email">Email</label> <input type="email"
-						class="form-control" id="email_Id">
-				</div>
+					<div class="mt-2">
+						<label for="password">Password</label> <input type="password"
+							name="password" class="form-control" id="user_Password">
+					</div>
 
-				<div class="mt-2">
-					<label for="password">Password</label> <input type="password"
-						class="form-control" id="user_Password">
-				</div>
+					<div class="form_Buttons mt-4">
+						<button type="submit">Login</button>
+						<button type="button" class="mt-3" onclick="registrationForm()">Register</button>
+					</div>
+				</form>
 
-				<div class="form_Buttons mt-4">
-					<button>Login</button>
-					<button class="mt-3" onclick="registrationForm()">Register</button>
-				</div>
 			</div>
 		</div>
 	</div>
 
-
 	<!-- registartion modal -->
-
-
   <div class="modal fade" id="registration_Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
